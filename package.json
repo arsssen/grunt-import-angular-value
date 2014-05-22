@@ -1,7 +1,7 @@
 {
   "name": "import-angular-value",
   "description": "Imports value object from Angular module.value",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/arsssen/grunt-import-angular-value",
   "author": {
     "name": "Arsen",

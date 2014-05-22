@@ -84,8 +84,8 @@ and you can use these values in gruntfile, like:
 
 some_other_task: {
     options: {
-        hostname: <%=angularValue.MyModule1.host>,
-        port: <%=angularValue.MyModule2.port>,
+        hostname: <%=angularValue.MyModule1.config.host>,
+        port: <%=angularValue.MyModule2.config2.port>,
     }
 }
 

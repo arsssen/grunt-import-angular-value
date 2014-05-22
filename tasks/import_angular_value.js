@@ -19,13 +19,14 @@ module.exports = function (grunt) {
             configVarName: 'angularValue'
         });
 
-        var ConfigObj = {}, importer = {};
+        var ConfigObj = {}, importer = { noop: function() {}};
 
         var sourceCode = fs.readFileSync(options.path, {encoding: 'utf8'});
         var i;
         function createLoader(moduleName) {
             return function (name, configObj) {
-                ConfigObj[moduleName] = configObj;
+                ConfigObj[moduleName] = {};
+                ConfigObj[moduleName][name] = configObj;
             };
         }
         for (i = 0; i < options.modules.length; i++) {
@@ -34,6 +35,16 @@ module.exports = function (grunt) {
 
             //TODO: use regexp instead of replace, so there will be no need to specify module names
             sourceCode = sourceCode.replace(moduleName + '.value', 'importer.' + moduleName);
+
+            //skip others
+            sourceCode = sourceCode.replace(moduleName + '.run', 'importer.noop');
+            sourceCode = sourceCode.replace(moduleName + '.config', 'importer.noop');
+            sourceCode = sourceCode.replace(moduleName + '.controller', 'importer.noop');
+            sourceCode = sourceCode.replace(moduleName + '.factory', 'importer.noop');
+            sourceCode = sourceCode.replace(moduleName + '.service', 'importer.noop');
+            sourceCode = sourceCode.replace(moduleName + '.directive', 'importer.noop');
+
+
         }
         eval(sourceCode);
         grunt.config.set(options.configVarName, ConfigObj);
