@@ -11,12 +11,13 @@ var fs = require('fs');
 
 module.exports = function (grunt) {
 
-    grunt.registerMultiTask('import_angular_value', 'Imports value object from Angular module.value', function () {
+    grunt.registerMultiTask('import_angular_value', 'Imports value object from Angular module.value or module.constant', function () {
 
         var options = this.options({
             path: null,
             modules: [],
-            configVarName: 'angularValue'
+            configVarName: 'angularValue',
+            objectsAsJson: false
         });
 
         var ConfigObj = {}, importer = { noop: function() {}};
@@ -35,6 +36,7 @@ module.exports = function (grunt) {
 
             //TODO: use regexp instead of replace, so there will be no need to specify module names
             sourceCode = sourceCode.replace(moduleName + '.value', 'importer.' + moduleName);
+            sourceCode = sourceCode.replace(moduleName + '.constant', 'importer.' + moduleName);
 
             //skip others
             sourceCode = sourceCode.replace(moduleName + '.run', 'importer.noop');
@@ -47,6 +49,9 @@ module.exports = function (grunt) {
 
         }
         eval(sourceCode);
+        if (options.objectsAsJson && typeof ConfigObj === 'object') {
+            ConfigObj = JSON.stringify(ConfigObj);
+        }
         grunt.config.set(options.configVarName, ConfigObj);
 
     });
